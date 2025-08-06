@@ -1,0 +1,18 @@
+---
+- hosts: ubuntu
+  become: yes
+
+  tasks:
+
+  - name: Sistema actualizado
+    ansible.builtin.apt:
+      name: "*"
+      state: latest
+      update_cache: true
+    notify: Reiniciar sistema
+
+  handlers:
+
+  - name: Reiniciar sistema
+    ansible.builtin.reboot:
+
