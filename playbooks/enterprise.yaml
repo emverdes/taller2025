@@ -1,0 +1,36 @@
+---
+- hosts: ubuntu
+  become: yes
+  vars:
+    usuarios:
+      - nombre: picard
+        comentario: "JeanLuc Picard"
+      - nombre: data
+        comentario: "Tte.Cmdte. Data"
+      - nombre: crusher.md
+        comentario: "Dra. Crusher"
+      - nombre: troy
+        comentario: "Deana Troy"
+
+  tasks:
+
+  - name: Grupo enterprise creado
+    ansible.builtin.group:
+      name: enterprise
+      state: present
+      gid: 2000
+
+  - name: Usuarios creados
+    ansible.builtin.user:
+      name: "{{ item.nombre }}"
+      comment: "{{ item.comentario }}"
+      groups: enterprise
+    loop: "{{ usuarios }}"
+
+  - name: Directorio enterprise creado
+    ansible.builtin.file:
+      path: /var/enterprise
+      state: directory
+      owner: picard
+      group: enterprise
+      mode: '2770'
